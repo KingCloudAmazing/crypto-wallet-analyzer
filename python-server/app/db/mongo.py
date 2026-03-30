@@ -26,3 +26,6 @@ def get_wallet_transactions(wallet_address):
 def insert_normalized_transactions(transactions):
     if transactions:
         normalized_collection.insert_many(transactions)
+
+def is_wallet_normalized(wallet):
+    return normalized_collection.count_documents({"wallet": wallet}) > 0
