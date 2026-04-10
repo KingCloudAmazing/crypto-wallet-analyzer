@@ -1,0 +1,55 @@
+.vault-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: var(--surface-container-highest);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
+  /* Shadow reversed to go up */
+  box-shadow: 0 -10px 40px rgba(6, 14, 32, 0.4);
+}
+
+.vault-bottom-nav .nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--on-surface-variant);
+  transition: all 0.2s ease;
+  font-family: var(--font-body);
+  width: 72px;
+  height: 60px;
+}
+
+.vault-bottom-nav .nav-item .icon {
+  font-size: 1.25rem;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.vault-bottom-nav .nav-item .label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.vault-bottom-nav .nav-item.active .icon,
+.vault-bottom-nav .nav-item.active .label {
+  color: var(--primary);
+  opacity: 1;
+}
+
+/* Simulate the "recessed glow" for active item */
+.vault-bottom-nav .nav-item.active {
+  background: rgba(255, 184, 116, 0.05); /* very subtle primary tint */
+  border-radius: var(--radius-lg);
+}

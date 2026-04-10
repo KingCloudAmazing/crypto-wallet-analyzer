@@ -1,0 +1,113 @@
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.comparison-section {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.entity-card {
+  gap: 24px;
+}
+
+.entity-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.entity-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  background: var(--surface-container-highest);
+}
+
+.entity-icon.primary-icon {
+  color: var(--primary);
+  background: rgba(255, 184, 116, 0.1);
+}
+
+.entity-icon.warning-icon {
+  color: var(--error);
+  background: var(--error-container);
+}
+
+.score-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.score-display {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.score-value {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.score-max {
+  color: var(--on-surface-variant);
+  font-weight: 600;
+}
+
+.score-value.positive { color: var(--secondary); }
+.score-value.warning { color: var(--primary); } /* Or a warning orange/red depending on spec, using primary for now */
+
+.status-badge {
+  display: inline-block;
+  margin-top: 12px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.status-badge.positive { color: var(--secondary); }
+.status-badge.warning { color: var(--primary); }
+
+.asset-balance {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.positive { color: var(--secondary); }
+.negative { color: var(--error); }
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.metric-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.metric-box .vault-text-primary {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.mb-4 {
+  margin-bottom: 16px;
+}
+
+.exposure-warning {
+  border-left: 4px solid var(--primary);
+}

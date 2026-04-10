@@ -1,0 +1,88 @@
+.pb-nav {
+  padding-bottom: 100px;
+}
+
+.global-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.services-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.service-card {
+  gap: 16px;
+}
+
+.service-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.service-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.service-icon {
+  font-size: 1.5rem;
+  opacity: 0.2;
+}
+
+.service-metrics {
+  display: flex;
+  gap: 32px;
+  margin-top: 8px;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.metric .value {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.event-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.event-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.event-icon {
+  font-size: 0.875rem;
+  font-weight: bold;
+  margin-top: 2px;
+}
+
+.event-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}

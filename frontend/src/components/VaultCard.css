@@ -1,0 +1,32 @@
+.vault-card {
+  border-radius: var(--radius-xl);
+  padding: 24px; /* Spacious default */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* No-Line rule relies purely on surface changes */
+.vault-card.default {
+  background: var(--surface-container-low);
+  /* Vault subtle glow edge */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+/* For Actionable areas */
+.vault-card.actionable {
+  background: var(--surface-container-highest);
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+.vault-card.actionable:hover {
+  background: var(--surface-variant);
+}
+
+/* For nested areas inside another card */
+.vault-card.nested {
+  background: var(--surface-container-lowest);
+  border: 1px solid var(--outline-variant); /* Ghost Border */
+  border-radius: var(--radius-lg); 
+  padding: 16px;
+}

@@ -1,0 +1,48 @@
+.vault-glow-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  outline: none;
+}
+
+.vault-glow-btn.full-width {
+  width: 100%;
+}
+
+.vault-glow-btn.primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-container));
+  color: var(--surface);
+  box-shadow: 0 4px 14px rgba(247, 147, 26, 0.2);
+}
+.vault-glow-btn.primary:hover {
+  box-shadow: 0 6px 20px rgba(247, 147, 26, 0.4);
+  transform: translateY(-1px);
+}
+
+.vault-glow-btn.secondary {
+  background: var(--surface-container-highest);
+  color: var(--on-surface);
+}
+.vault-glow-btn.secondary:hover {
+  background: var(--surface-variant);
+}
+
+.vault-glow-btn.tertiary {
+  background: transparent;
+  color: var(--primary);
+  padding: 12px 16px;
+}
+.vault-glow-btn.tertiary:hover {
+  background: rgba(255, 184, 116, 0.05); /* very subtle primary tint */
+}

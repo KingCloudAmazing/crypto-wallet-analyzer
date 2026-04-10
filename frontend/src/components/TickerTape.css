@@ -1,0 +1,52 @@
+.vault-ticker-container {
+  background: var(--surface-container-highest);
+  width: 100%;
+  overflow: hidden;
+  padding: 8px 16px;
+  display: flex;
+  white-space: nowrap;
+  border-radius: 99px;
+  margin-bottom: 24px;
+}
+
+.vault-ticker-scroll {
+  display: inline-block;
+}
+
+.ticker-item {
+  margin-right: 2rem;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.ticker-item .label {
+  color: var(--on-surface-variant);
+  margin-right: 6px;
+  text-transform: uppercase;
+}
+
+.ticker-item .value {
+  color: var(--on-surface);
+}
+.ticker-item .value.positive { color: var(--secondary); }
+.ticker-item .value.negative { color: var(--error); }
+
+.pulse-dot::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--secondary);
+  border-radius: 50%;
+  margin-right: 6px;
+  margin-bottom: 1px;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(78, 222, 163, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 4px rgba(78, 222, 163, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(78, 222, 163, 0); }
+}
