@@ -52,7 +52,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="vault-page">
+    <div className="vault-page fade-in-up">
       <header className="hflex" style={{ justifyContent: 'space-between' }}>
         <div>
           <h1 className="display-md vault-text-primary">Institutional Analytics</h1>
@@ -74,7 +74,7 @@ export default function Dashboard() {
       </header>
 
       {/* Top Metrics Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
+      <div className="fade-in-up stagger-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
         <div className="vault-card vflex gap-sm">
           <span className="label-sm">Total Asset Value</span>
           <span className="display-md vault-text-primary">{currentData.totalValue}</span>
@@ -98,7 +98,7 @@ export default function Dashboard() {
       </div>
 
       {/* Charts Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem' }}>
+      <div className="fade-in-up stagger-2" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', marginTop: '1rem' }}>
         <div className="vault-card vflex gap-md">
           <span className="label-sm">Transaction Volume (7D)</span>
           <div style={{ height: '300px', width: '100%' }}>

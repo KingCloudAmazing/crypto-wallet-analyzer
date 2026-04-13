@@ -4,6 +4,10 @@ import Sidebar from './components/Sidebar';
 import WalletsComparison from './pages/WalletsComparison';
 import SystemDiagnostics from './pages/SystemDiagnostics';
 import Dashboard from './pages/Dashboard';
+import PastAnalyses from './pages/PastAnalyses';
+import ApiReference from './pages/ApiReference';
+import Support from './pages/Support';
+import AboutFounders from './pages/AboutFounders';
 
 export default function App() {
   return (
@@ -15,8 +19,12 @@ export default function App() {
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/wallets" element={<WalletsComparison />} />
+            <Route path="/past-analyses" element={<PastAnalyses />} />
             <Route path="/diagnostics" element={<SystemDiagnostics />} />
-            <Route path="/analytics" element={<div className="vault-page"><h1 className="display-lg vault-text-primary">Analytics</h1><p className="body-md">Advanced digital asset forensics (Stub)</p></div>} />
+            <Route path="/api" element={<ApiReference />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/founders" element={<AboutFounders />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </main>
       </div>

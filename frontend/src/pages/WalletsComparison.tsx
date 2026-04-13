@@ -8,7 +8,7 @@ import './WalletsComparison.css';
 
 export default function WalletsComparison() {
   return (
-    <div className="vault-page">
+    <div className="vault-page fade-in-up">
       <TickerTape />
 
       <header className="page-header">
@@ -25,11 +25,11 @@ export default function WalletsComparison() {
         </div>
       </header>
 
-      <section className="comparison-section" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+      <section className="comparison-section fade-in-up stagger-1" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2.5rem' }}>
         {/* Primary Entity */}
         <div className="vault-card entity-card">
           <div className="entity-header">
-            <div className="entity-icon primary-icon">🏦</div>
+            <div className="entity-icon primary-icon" style={{ fontSize: '1rem', fontWeight: 'bold' }}>INT</div>
             <div>
               <div className="label-sm">Primary Entity</div>
               <h2 className="display-md vault-text-primary">Alpha Strategic Reserve</h2>
@@ -67,7 +67,7 @@ export default function WalletsComparison() {
         {/* Counterparty Target */}
         <div className="vault-card entity-card">
           <div className="entity-header">
-            <div className="entity-icon warning-icon" style={{ color: 'var(--primary)', background: 'rgba(251, 163, 17, 0.1)' }}>⚠️</div>
+            <div className="entity-icon warning-icon" style={{ color: 'var(--primary)', background: 'rgba(251, 163, 17, 0.1)', fontSize: '1rem', fontWeight: 'bold' }}>EXT</div>
             <div>
               <div className="label-sm">Comparison Target</div>
               <h2 className="display-md vault-text-primary">External Liquidity Node</h2>
@@ -105,8 +105,8 @@ export default function WalletsComparison() {
       </section>
       
       {/* Exposure Warning */}
-      <div className="vault-card" style={{ borderLeft: '4px solid var(--primary)', marginTop: '2rem' }}>
-         <div className="label-sm" style={{ color: 'var(--primary)' }}>Vault Recommendation</div>
+      <div className="vault-card fade-in-up stagger-2" style={{ borderLeft: '4px solid var(--error)', marginTop: '3rem' }}>
+         <div className="label-sm" style={{ color: 'var(--error)' }}>Vault Recommendation</div>
          <h3 className="display-md vault-text-primary" style={{ fontSize: '1.5rem', margin: '8px 0'}}>EXPOSURE LIMIT REACHED</h3>
          <p className="body-sm" style={{ marginBottom: '16px' }}>
            Automated risk protocols suggest a max transaction limit of <strong className="vault-text-primary">0.5 BTC</strong> for the current interaction based on target risk profiles.

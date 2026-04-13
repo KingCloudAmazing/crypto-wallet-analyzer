@@ -6,10 +6,13 @@ export default function Sidebar() {
   const location = useLocation();
 
   const navItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: '📊' },
-    { name: 'Wallets', path: '/wallets', icon: '💼' },
-    { name: 'Analytics', path: '/analytics', icon: '📈' },
-    { name: 'Diagnostics', path: '/diagnostics', icon: '⚡' },
+    { name: 'Dashboard', path: '/dashboard', icon: '—' },
+    { name: 'Wallets', path: '/wallets', icon: '—' },
+    { name: 'Past Analyses', path: '/past-analyses', icon: '—' },
+    { name: 'Diagnostics', path: '/diagnostics', icon: '—' },
+    { name: 'API Reference', path: '/api', icon: '—' },
+    { name: 'Support', path: '/support', icon: '—' },
+    { name: 'About Founders', path: '/founders', icon: '—' },
   ];
 
   return (

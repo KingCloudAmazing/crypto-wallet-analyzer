@@ -11,6 +11,9 @@
 .sidebar-header .display-md {
   font-size: 1.5rem;
   margin-bottom: 0.25rem;
+  background: linear-gradient(90deg, var(--primary), #FFBD66);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .sidebar-nav {
@@ -24,34 +27,41 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1.25rem;
   border-radius: var(--radius-md);
   color: var(--on-surface-variant);
   text-decoration: none;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   border: 1px solid transparent;
 }
 
 .nav-item:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255, 255, 255, 0.03);
   color: var(--on-surface);
+  transform: translateX(4px);
 }
 
 .nav-item.active {
-  background-color: var(--surface-variant);
-  color: var(--on-surface);
-  border-color: var(--outline);
-  box-shadow: inset 2px 0 0 var(--primary);
+  background-color: rgba(251, 163, 17, 0.1);
+  color: var(--primary);
+  border-color: rgba(251, 163, 17, 0.2);
+  box-shadow: inset 4px 0 0 var(--primary);
 }
 
 .nav-icon {
   font-size: 1.25rem;
+  color: inherit;
+  transition: transform 0.3s ease;
+}
+
+.nav-item:hover .nav-icon {
+  transform: scale(1.1);
 }
 
 .sidebar-footer {
   margin-top: 2rem;
-  padding-top: 1rem;
+  padding-top: 1.5rem;
   border-top: 1px solid var(--outline);
 }
 
@@ -65,9 +75,10 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
+  animation: pulseGlow 2s infinite;
 }
 
 .status-dot.online {
   background-color: var(--success);
-  box-shadow: 0 0 8px var(--success);
+  box-shadow: 0 0 12px var(--success-glow);
 }
