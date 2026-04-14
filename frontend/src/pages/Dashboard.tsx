@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { walletService } from '../services/api';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -10,42 +10,36 @@ export default function Dashboard() {
   const [chain, setChain] = useState('eth-mainnet');
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>(null);
-
-  // Mock data for initial render or API failure fallback
-  const fallbackData = {
-    totalValue: "$1,294,092.00",
-    riskScore: 24,
-    riskLevel: "Low Risk",
-    transactionCount: 42,
-    exposure: "12%",
-    history: [
-      { date: 'Mon', volume: 4000 },
-      { date: 'Tue', volume: 3000 },
-      { date: 'Wed', volume: 2000 },
-      { date: 'Thu', volume: 2780 },
-      { date: 'Fri', volume: 1890 },
-      { date: 'Sat', volume: 2390 },
-      { date: 'Sun', volume: 3490 },
-    ],
-    chainDistribution: [
-      { name: 'Ethereum', value: 75 },
-      { name: 'Polygon', value: 15 },
-      { name: 'BSC', value: 10 },
-    ]
-  };
-
-  const currentData = data || fallbackData;
+  const [error, setError] = useState('');
 
   const handleAnalyze = async () => {
     setLoading(true);
+    setError('');
     try {
       const result = await walletService.analyzeWalletRisk({ address, chain });
-      // In a real app we parse result to match our UI state. 
-      // Setting mock anyway to showcase UI state progression if API fails.
-      setData(fallbackData); 
-    } catch (err) {
-      console.warn("API Error, falling back to mock data", err);
-      setData(fallbackData);
+      
+      const mappedData = {
+        totalValue: new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(result.total_volume),
+        riskScore: result.score,
+        riskLevel: `${result.tier} RISK`,
+        transactionCount: result.tx_count,
+        exposure: `${((result.hhi || 0) * 100).toFixed(1)}%`,
+        // Charts will stay empty or show 0 until backend provides timeseries data
+        history: [], 
+        chainDistribution: [
+          { name: chain, value: 100 }
+        ]
+      };
+      
+      setData(mappedData);
+    } catch (err: any) {
+      console.error("Analysis Error:", err);
+      if (err.response?.status === 202) {
+        setError("Wallet synchronization in progress. Please retry in 10-20 seconds.");
+      } else {
+        setError(err.response?.data?.message || "Internal Vault Error. Check logs.");
+      }
+      setData(null);
     } finally {
       setLoading(false);
     }
@@ -53,84 +47,82 @@ export default function Dashboard() {
 
   return (
     <div className="vault-page fade-in-up">
-      <header className="hflex" style={{ justifyContent: 'space-between' }}>
+      <header className="hflex" style={{ justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 className="display-md vault-text-primary">Institutional Analytics</h1>
           <p className="body-md">Real-time risk assessment and asset monitoring.</p>
         </div>
-        <div className="hflex gap-sm">
+        <div className="hflex gap-sm" style={{ flex: 1, minWidth: '300px', justifyContent: 'flex-end' }}>
           <input
             type="text"
             className="vault-card"
-            style={{ padding: '0.5rem 1rem', width: '300px' }}
-            placeholder="Wallet address..."
+            style={{ padding: '0.5rem 1rem', flex: 1, maxWidth: '400px' }}
+            placeholder="Wallet address (0x...)"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
-          <button className="vault-btn vault-btn-primary" onClick={handleAnalyze}>
+          <button className="vault-btn vault-btn-primary" onClick={handleAnalyze} disabled={loading}>
             {loading ? 'Analyzing...' : 'Analyze Risk'}
           </button>
         </div>
       </header>
 
-      {/* Top Metrics Row */}
-      <div className="fade-in-up stagger-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
-        <div className="vault-card vflex gap-sm">
-          <span className="label-sm">Total Asset Value</span>
-          <span className="display-md vault-text-primary">{currentData.totalValue}</span>
-          <span className="body-sm vault-text-success">↑ 4.2% (24h)</span>
+      {error && (
+        <div className="vault-card" style={{ borderLeft: '4px solid var(--error)', marginTop: '1rem', color: 'var(--error)' }}>
+          ⚠ {error}
         </div>
-        <div className="vault-card vflex gap-sm">
-          <span className="label-sm">Risk Score / 100</span>
-          <span className="display-md vault-text-accent">{currentData.riskScore}</span>
-          <span className="body-sm vault-text-primary">{currentData.riskLevel}</span>
-        </div>
-        <div className="vault-card vflex gap-sm">
-          <span className="label-sm">Transaction Volume</span>
-          <span className="display-md vault-text-primary">{currentData.transactionCount}</span>
-          <span className="body-sm vault-text-primary">Past 30 days</span>
-        </div>
-        <div className="vault-card vflex gap-sm">
-          <span className="label-sm">High-Risk Exposure</span>
-          <span className="display-md vault-text-error">{currentData.exposure}</span>
-          <span className="body-sm vault-text-error">Flagged Paths</span>
-        </div>
-      </div>
+      )}
 
-      {/* Charts Row */}
-      <div className="fade-in-up stagger-2" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', marginTop: '1rem' }}>
-        <div className="vault-card vflex gap-md">
-          <span className="label-sm">Transaction Volume (7D)</span>
-          <div style={{ height: '300px', width: '100%' }}>
-            <ResponsiveContainer>
-              <LineChart data={currentData.history}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--outline)" vertical={false} />
-                <XAxis dataKey="date" stroke="var(--on-surface-variant)" tick={{ fill: 'var(--on-surface-variant)' }} axisLine={false} tickLine={false} />
-                <YAxis stroke="var(--on-surface-variant)" tick={{ fill: 'var(--on-surface-variant)' }} axisLine={false} tickLine={false} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: 'var(--surface)', border: '1px solid var(--outline)', borderRadius: 'var(--radius-md)' }} 
-                  itemStyle={{ color: 'var(--primary)' }}
-                />
-                <Line type="monotone" dataKey="volume" stroke="var(--primary)" strokeWidth={3} dot={false} activeDot={{ r: 6, fill: 'var(--primary)' }} />
-              </LineChart>
-            </ResponsiveContainer>
+      {data ? (
+        <>
+          {/* Top Metrics Row */}
+          <div className="fade-in-up stagger-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginTop: '1.5rem' }}>
+            <div className="vault-card vflex gap-sm">
+              <span className="label-sm">Total Asset Value</span>
+              <span className="display-md vault-text-primary">{data.totalValue}</span>
+              <span className="body-sm">Aggregate Volume tracked</span>
+            </div>
+            <div className="vault-card vflex gap-sm">
+              <span className="label-sm">Risk Score / 100</span>
+              <span className="display-md vault-text-accent">{data.riskScore}</span>
+              <span className="body-sm vault-text-primary">{data.riskLevel}</span>
+            </div>
+            <div className="vault-card vflex gap-sm">
+              <span className="label-sm">Transaction Volume</span>
+              <span className="display-md vault-text-primary">{data.transactionCount}</span>
+              <span className="body-sm vault-text-primary">Cumulative count</span>
+            </div>
+            <div className="vault-card vflex gap-sm">
+              <span className="label-sm">Concentration (HHI)</span>
+              <span className="display-md vault-text-error">{data.exposure}</span>
+              <span className="body-sm vault-text-error">Asset centralization</span>
+            </div>
           </div>
-        </div>
 
-        <div className="vault-card vflex gap-md">
-          <span className="label-sm">Chain Distribution</span>
-          <div style={{ height: '300px', width: '100%' }}>
-            <ResponsiveContainer>
-              <BarChart data={currentData.chainDistribution} layout="vertical" margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-                <XAxis type="number" hide />
-                <YAxis dataKey="name" type="category" stroke="var(--on-surface-variant)" axisLine={false} tickLine={false} width={80} />
-                <Tooltip cursor={{ fill: 'var(--surface-variant)' }} contentStyle={{ backgroundColor: 'var(--surface)', borderColor: 'var(--outline)' }} />
-                <Bar dataKey="value" fill="var(--primary)" radius={[0, 4, 4, 0]} barSize={20} />
-              </BarChart>
-            </ResponsiveContainer>
+          {/* Charts Row */}
+          <div className="fade-in-up stagger-2" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginTop: '1rem' }}>
+            <div className="vault-card vflex gap-md">
+              <span className="label-sm">Chain Distribution</span>
+              <div style={{ height: '300px', width: '100%' }}>
+                <ResponsiveContainer>
+                  <BarChart data={data.chainDistribution} layout="vertical">
+                    <XAxis type="number" hide />
+                    <YAxis dataKey="name" type="category" stroke="var(--on-surface-variant)" axisLine={false} tickLine={false} width={80} />
+                    <Tooltip cursor={{ fill: 'var(--surface-variant)' }} contentStyle={{ backgroundColor: 'var(--surface)', borderColor: 'var(--outline)' }} />
+                    <Bar dataKey="value" fill="var(--primary)" radius={[0, 4, 4, 0]} barSize={20} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </div>
+        </>
+      ) : (
+        <div className="vault-card fade-in-up" style={{ marginTop: '2rem', textAlign: 'center', padding: '4rem' }}>
+           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📡</div>
+           <h2 className="display-md vault-text-primary">Awaiting Uplink</h2>
+           <p className="body-lg">Enter a wallet address above to begin institutional-grade risk analysis.</p>
         </div>
-      </div>
+      )}
     </div>
   );
 }

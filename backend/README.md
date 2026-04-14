@@ -39,11 +39,11 @@ For EVM chains, the sync also inspects transaction receipt logs and extracts **E
 1. **Install dependencies**
 
 ```bash
-cd node-server
+cd backend
 npm install
 ```
 
-2. **Create a `.env` file** in `node-server`:
+2. **Create a `.env` file** in `backend`:
 
 ```bash
 MONGO_URI=mongodb://localhost:27017/wallet-sync
@@ -118,7 +118,7 @@ Use:
 
 ```bash
 # 1. Navigate to the project directory
-cd /home/raghav-maheshwari/Raghav/Software_Engg_Project/Server/node-server
+cd /home/raghav-maheshwari/Raghav/Software_Engg_Project/Server/backend
 
 # 2. Import transactions from APIs to MongoDB
 # Uses Goldrush (Covalent) for EVM chains and Tatum for non-EVM chains

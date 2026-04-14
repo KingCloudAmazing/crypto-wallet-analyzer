@@ -110,7 +110,7 @@ Expected mounts include:
 
 Quick practical verification:
 
-1. Edit `node-server/src/app.js` health response text.
+1. Edit `backend/src/app.js` health response text.
 2. Restart backend:
 
 ```bash

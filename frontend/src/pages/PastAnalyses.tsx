@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { walletService, RiskAnalysisResult } from '../services/api';
 
 export default function PastAnalyses() {
-  const scans = [
-    { address: '0xd8dA...045', date: '2026-04-12', chain: 'Ethereum', risk: 24, status: 'Low Risk' },
-    { address: '0xEA8a...FE1', date: '2026-04-10', chain: 'Polygon', risk: 89, status: 'High Risk' },
-    { address: '0x12bF...92C', date: '2026-04-08', chain: 'BSC', risk: 45, status: 'Medium Risk' },
-  ];
+  const [scans, setScans] = useState<RiskAnalysisResult[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    walletService.getAllAnalyses()
+      .then(data => {
+        setScans(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div className="vault-page fade-in-up">
@@ -15,36 +25,50 @@ export default function PastAnalyses() {
       </header>
 
       <div className="vault-card fade-in-up stagger-1" style={{ marginTop: '2rem' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead>
-            <tr style={{ borderBottom: '1px solid var(--outline)', color: 'var(--on-surface-variant)' }}>
-              <th style={{ padding: '1rem' }}>Wallet Address</th>
-              <th style={{ padding: '1rem' }}>Chain</th>
-              <th style={{ padding: '1rem' }}>Date</th>
-              <th style={{ padding: '1rem' }}>Risk Score</th>
-              <th style={{ padding: '1rem' }}>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {scans.map((scan, i) => (
-              <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                <td style={{ padding: '1rem' }} className="vault-text-primary">{scan.address}</td>
-                <td style={{ padding: '1rem' }}>{scan.chain}</td>
-                <td style={{ padding: '1rem' }}>{scan.date}</td>
-                <td style={{ padding: '1rem' }} className="vault-text-accent">{scan.risk}</td>
-                <td style={{ padding: '1rem' }}>
-                  <span style={{ 
-                    padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold',
-                    background: scan.risk > 50 ? 'var(--error)' : 'var(--success)', 
-                    color: '#000' 
-                  }}>
-                    {scan.status}
-                  </span>
-                </td>
+        {loading ? (
+          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--on-surface-variant)' }}>
+            Retrieving vault logs...
+          </div>
+        ) : scans.length === 0 ? (
+          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--on-surface-variant)' }}>
+            No analysis records found. Run a scan from the Dashboard.
+          </div>
+        ) : (
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--outline)', color: 'var(--on-surface-variant)' }}>
+                <th style={{ padding: '1rem' }}>Wallet Address</th>
+                <th style={{ padding: '1rem' }}>Chain</th>
+                <th style={{ padding: '1rem' }}>Date</th>
+                <th style={{ padding: '1rem' }}>Risk Score</th>
+                <th style={{ padding: '1rem' }}>Tier</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {scans.map((scan, i) => (
+                <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  <td style={{ padding: '1rem' }} className="vault-text-primary font-mono">
+                    {scan.wallet.slice(0, 6)}...{scan.wallet.slice(-4)}
+                  </td>
+                  <td style={{ padding: '1rem' }}>{scan.chain}</td>
+                  <td style={{ padding: '1rem' }}>
+                   {new Date((scan as any).updatedAt || Date.now()).toLocaleDateString()}
+                  </td>
+                  <td style={{ padding: '1rem' }} className="vault-text-accent">{scan.score}</td>
+                  <td style={{ padding: '1rem' }}>
+                    <span style={{ 
+                      padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold',
+                      background: scan.score > 50 ? 'var(--error)' : 'var(--success)', 
+                      color: '#000' 
+                    }}>
+                      {scan.tier}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
