@@ -17,10 +17,13 @@ def _get_db():
     return _db
 
 
-def get_wallet_transactions(wallet_address: str) -> list:
+def get_wallet_transactions(wallet_address: str, chain: str = None) -> list:
     """Fetch all raw transactions for a wallet from ledgerentries."""
     db = _get_db()
-    return list(db["ledgerentries"].find({"wallet": wallet_address}))
+    query = {"wallet": wallet_address}
+    if chain:
+        query["chain"] = chain
+    return list(db["ledgerentries"].find(query))
 
 
 def insert_normalized_transactions(transactions: list) -> None:
@@ -29,18 +32,27 @@ def insert_normalized_transactions(transactions: list) -> None:
         db["normalized_transactions"].insert_many(transactions)
 
 
-def is_wallet_normalized(wallet: str) -> bool:
+def is_wallet_normalized(wallet: str, chain: str = None) -> bool:
     db = _get_db()
-    return db["normalized_transactions"].count_documents({"wallet": wallet}) > 0
+    query = {"wallet": wallet}
+    if chain:
+        query["chain"] = chain
+    return db["normalized_transactions"].count_documents(query) > 0
 
 
-def save_analysis_result(wallet: str, risk_result: dict) -> None:
+def save_analysis_result(wallet: str, risk_result: dict, chain: str = None) -> None:
     """
     Upserts the risk analysis result into analysisHistory collection.
     """
     db = _get_db()
+    
+    query = {"wallet": wallet}
+    if chain:
+        query["chain"] = chain
+        risk_result["chain"] = chain
+
     db["analysisHistory"].update_one(
-        {"wallet": wallet},
+        query,
         {
             "$set": {
                 **risk_result,
