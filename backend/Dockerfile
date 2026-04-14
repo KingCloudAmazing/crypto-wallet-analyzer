@@ -16,7 +16,7 @@ FROM base AS deps
 COPY package.json package-lock.json ./
 
 # Install all dependencies (including devDependencies for build)
-RUN npm ci
+RUN npm install
 
 # ---- Production stage ----
 FROM base AS production
@@ -25,7 +25,7 @@ WORKDIR /app
 
 # Copy installed production-only node_modules
 COPY package.json package-lock.json ./
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 
 # Copy application source code
 COPY src ./src

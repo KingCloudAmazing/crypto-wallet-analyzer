@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Body
+from pydantic import BaseModel
 from app.schemas.models import WalletHistory, WalletAggregates, RiskScoreResponse
 from app.processors.aggregates import compute_aggregates
 from app.processors.aggregates_dict import compute_aggregates as compute_aggregates_dict
@@ -14,6 +15,9 @@ from app.db.mongo import (
 )
 from app.processors.normalize import normalize_transactions
 from app.schemas.transaction import NormalizedTransaction
+
+class ChainRequest(BaseModel):
+    chain: str = ""
 
 app = FastAPI(
     title="Crypto Wallet Risk Analyzer - Python Engine",
@@ -47,15 +51,17 @@ def get_risk_score(history: WalletHistory):
 # ── Dict-based endpoints (normalize + HHI/Gini/temporal pipeline) ──
 
 @app.post("/normalize/{wallet}")
-def normalize_wallet(wallet: str):
+def normalize_wallet(wallet: str, request_data: ChainRequest = Body(default=None)):
     """
     Normalizes raw ledger transactions for a wallet and stores them.
     Called by Node.js python.service.js after fetchGoldrushTxs/fetchTatumTxs.
     """
-    if is_wallet_normalized(wallet):
+    chain = request_data.chain if request_data else None
+
+    if is_wallet_normalized(wallet, chain):
         return {"message": "Already normalized"}
 
-    raw_txns = get_wallet_transactions(wallet)
+    raw_txns = get_wallet_transactions(wallet, chain)
 
     if not raw_txns:
         return {"message": "No transactions found"}
@@ -79,12 +85,14 @@ def normalize_wallet(wallet: str):
 
 
 @app.post("/analyze/{wallet}")
-def analyze_wallet(wallet: str):
+def analyze_wallet(wallet: str, request_data: ChainRequest = Body(default=None)):
     """
     Full pipeline: normalize → aggregate → risk score → store.
     Returns the risk result to Node.js.
     """
-    raw_txns = get_wallet_transactions(wallet)
+    chain = request_data.chain if request_data else None
+
+    raw_txns = get_wallet_transactions(wallet, chain)
     if not raw_txns:
         raise HTTPException(status_code=404, detail="No transactions found for wallet")
 
@@ -101,12 +109,12 @@ def analyze_wallet(wallet: str):
     if not validated:
         raise HTTPException(status_code=422, detail="All transactions failed validation")
 
-    if not is_wallet_normalized(wallet):
+    if not is_wallet_normalized(wallet, chain):
         insert_normalized_transactions(validated)
 
     aggregates = compute_aggregates_dict(validated, wallet)
     risk_result = compute_risk_score(aggregates)
-    save_analysis_result(wallet, risk_result)
+    save_analysis_result(wallet, risk_result, chain)
 
     return risk_result
 

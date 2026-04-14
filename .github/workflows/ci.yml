@@ -64,7 +64,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: node-server
+        working-directory: backend
 
     steps:
       - name: Checkout code
@@ -75,7 +75,7 @@ jobs:
         with:
           node-version: "20"
           cache: npm
-          cache-dependency-path: node-server/package-lock.json
+          cache-dependency-path: backend/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -132,7 +132,7 @@ jobs:
         run: |
           echo "Waiting for Node.js server..."
           for i in $(seq 1 20); do
-            if curl -sf http://localhost:4000/health > /dev/null 2>&1; then
+            if curl -sf http://localhost:5000/health > /dev/null 2>&1; then
               echo "Node.js server is ready."
               break
             fi
@@ -148,7 +148,7 @@ jobs:
 
       - name: Assert Node.js /health returns 200
         run: |
-          STATUS=$(curl -o /dev/null -sw "%{http_code}" http://localhost:4000/health)
+          STATUS=$(curl -o /dev/null -sw "%{http_code}" http://localhost:5000/health)
           echo "Status: $STATUS"
           [ "$STATUS" = "200" ]
 

@@ -3,6 +3,7 @@ import {
   registerWallet,
   getWalletTransactions,
   analyzeWalletRisk,
+  getAllAnalyses,
 } from '../controllers/wallet.controller.js';
 
 const router = express.Router();
@@ -13,8 +14,10 @@ router.post('/register', registerWallet);
 // GET /api/wallet/transactions
 router.get('/transactions', getWalletTransactions);
 
-// POST /api/wallet/analyze   ← NEW (TC-17, TC-21)
-// Body: { address: string, chain: string }
+// GET /api/wallet/analyses
+router.get('/analyses', getAllAnalyses);
+
+// POST /api/wallet/analyze
 router.post('/analyze', analyzeWalletRisk);
 
 export default router;

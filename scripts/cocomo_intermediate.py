@@ -2095,7 +2095,7 @@ def main(argv: list[str]) -> int:
         "--dsqd-dir",
         action="append",
         default=[],
-        help="Limit DSQD analysis to a directory (repeatable), e.g. --dsqd-dir node-server/src",
+        help="Limit DSQD analysis to a directory (repeatable), e.g. --dsqd-dir backend/src",
     )
 
     args = parser.parse_args(argv)
@@ -2380,7 +2380,7 @@ def main(argv: list[str]) -> int:
 
         scope_dirs = [d for d in (args.dsqd_dir or []) if d.strip()]
         if not scope_dirs:
-            defaults = ["python-server/app", "node-server/src", "frontend/src"]
+            defaults = ["python-server/app", "backend/src", "frontend/src"]
             for d in defaults:
                 if (root / d).exists():
                     scope_dirs.append(d)

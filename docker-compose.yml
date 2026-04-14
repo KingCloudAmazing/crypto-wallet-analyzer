@@ -9,7 +9,7 @@ services:
     container_name: crypto-wallet-python
     restart: always
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
       - MONGO_URI=${MONGO_URI:?Set MONGO_URI in .env (MongoDB Atlas connection string)}
       - DB_NAME=${DB_NAME:-wallet-sync}
@@ -29,12 +29,12 @@ services:
   # ==========================================
   backend:
     build:
-      context: ./node-server
+      context: ./backend
       dockerfile: Dockerfile
     container_name: crypto-wallet-backend
     restart: always
     ports:
-      - "4000:5000"
+      - "5001:5000"
     environment:
       - NODE_ENV=production
       - PORT=5000
@@ -45,7 +45,7 @@ services:
       - TATUM_API_KEY=${TATUM_API_KEY:-}
       - JWT_SECRET=${JWT_SECRET:-dev-secret-change-me}
     volumes:
-      - ./node-server/src:/app/src
+      - ./backend/src:/app/src
     depends_on:
       python-server:
         condition: service_healthy
@@ -61,24 +61,20 @@ services:
   # React Frontend
   # ==========================================
   frontend:
-    profiles: ["frontend"]
     build:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: crypto-wallet-frontend
     restart: always
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
-      - VITE_API_URL=http://localhost:5000
+      - VITE_API_URL=http://localhost:5001
     depends_on:
       backend:
         condition: service_healthy
     networks:
       - crypto-network
-    volumes:
-      - ./frontend/src:/app/src
-      - /app/node_modules
 
 # ==========================================
 # Networks

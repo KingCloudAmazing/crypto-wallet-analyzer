@@ -28,12 +28,11 @@ Limit DSQD scope to specific directories:
 
 ```bash
 python3 scripts/cocomo_intermediate.py --no-cocomo --dsqd \
-  --dsqd-dir node-server/src \
+  --dsqd-dir backend/src \
   --dsqd-dir python-server/app
 ```
 
 Output includes:
 - nodes, edges, density
 - average out-degree
-- number of cycles (SCCs) and the largest cycle size
 
